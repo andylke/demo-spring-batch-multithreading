@@ -14,7 +14,7 @@ import org.springframework.boot.task.TaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 public class ImportRandomUserStepConfig {
@@ -43,12 +43,12 @@ public class ImportRandomUserStepConfig {
   @Autowired private UserRepository userRepository;
 
   @Bean
-  public TaskExecutor taskExecutor() {
+  public ThreadPoolTaskExecutor taskExecutor() {
     return new TaskExecutorBuilder().corePoolSize(50).maxPoolSize(50).queueCapacity(100).build();
   }
 
   @Bean
-  public Step importRandomUserStep(TaskExecutor taskExecutor) {
+  public Step importRandomUserStep(ThreadPoolTaskExecutor taskExecutor) {
     return stepBuilderFactory
         .get("importRandomUserStep")
         .<RandomUser, User>chunk(50)
